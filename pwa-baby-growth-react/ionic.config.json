@@ -1,0 +1,7 @@
+{
+  "name": "pwa-baby-growth-react",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

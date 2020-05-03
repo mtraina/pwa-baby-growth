@@ -1,0 +1,8 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "pwa-baby-growth-react",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}
