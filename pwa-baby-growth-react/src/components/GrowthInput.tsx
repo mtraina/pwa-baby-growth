@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonDatetime, IonFooter, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
+import TypePicker from './TypePicker'
 
-const onSave = (v: String) => console.log("the selected type is: " + v);
-const onCancel = () => console.log("cancelled selection of type");
+interface GrowthValue {
+  datetime: string
+  breast: number
+  pumped: number
+  powder: number
+  weight: number
+}
 
 const GrowthInput: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('2020-01-01T00:00:00.000');
+  //const [selectedType, setSelectedType] = useState(false);
   const [pickerIsOpen, setPickerIsOpen] = useState(false);
-
-  const TypeColumn = {
-    name: "Type",
-    options: [
-        { text: "Breast", value: "breast" },
-        { text: "Pumped", value: "pumped" },
-        { text: "Powder", value: "powder" }
-    ]
-    }
-    
+  //const [growthValue, setGrowthValue] = useState<GrowthValue | undefined>(undefined);
 
   return (
     <IonGrid>
@@ -36,26 +34,18 @@ const GrowthInput: React.FC = () => {
                 <IonButton onClick={() => {setPickerIsOpen(true);}}>
                     Select type
                 </IonButton>
-                <IonPicker 
-                    isOpen={pickerIsOpen} 
-                    columns={[ TypeColumn ]} 
-                    buttons={[
-                        {
-                          text: "Cancel",
-                          role: "cancel",
-                          handler: value => {
-                            onCancel()
-                            setPickerIsOpen(false)
-                          }
-                        },
-                        {
-                          text: "Confirm",
-                          handler: value => {
-                            onSave(value)
-                            setPickerIsOpen(false);
-                          }
-                        }
-                      ]}
+                <TypePicker 
+                    isOpen={pickerIsOpen}
+                    onCancel={() => {
+                      setPickerIsOpen(false);
+                    }}
+                    onSave={(_value: any) => {
+                      console.log(_value);
+                      //let { Day, SessionTime } = _value;
+                      //setSessionTime({ weekday: Day.value, period: SessionTime.value });
+                      //setSelectedType(_value);
+                      setPickerIsOpen(false);
+                    }}
                 />
             </IonCol>
             <IonCol></IonCol>
