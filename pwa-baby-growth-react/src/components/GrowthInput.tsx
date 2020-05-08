@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonDatetime, IonFooter, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
+import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
 
 const GrowthInput: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('2020-01-01T00:00:00.000');
@@ -10,15 +11,11 @@ const GrowthInput: React.FC = () => {
   const [pickerIsOpen, setPickerIsOpen] = useState(false);
   const [selectedFoodType, setSelectedFoodType] = useState(false);
 
-
+  const foodQuantityElems = generateNumberedColumnElem(0, 300, 5);
+  
   const FoodQuantityColumn = {
     name: "FoodQuantityElem",
-    options: [
-        { text: "0", value: 0 },
-        { text: "10", value: 10 },
-        { text: "20", value: 20 },
-        { text: "30", value: 30 }
-    ]
+    options: foodQuantityElems
   }
 
   const FoodTypeColumn = {
