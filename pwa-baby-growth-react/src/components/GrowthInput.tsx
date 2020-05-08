@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonDatetime, IonFooter, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
+import { IonItem, IonDatetime, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
 import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
+import { apiClient } from '../rest/RestClient'
+import axios from 'axios';
 
 interface GrowthData {
   datetime: string
@@ -11,8 +13,9 @@ interface GrowthData {
 }
 
 const GrowthInput: React.FC = () => {
-
-  const [selectedDate, setSelectedDate] = useState<string>('2020-01-01T00:00:00.000');
+  const now = Date.now()
+  const myDate: string = new Date().toISOString();
+  const [selectedDate, setSelectedDate] = useState<string>(myDate);
 
   const [breastPickerIsOpen, isBreastPickerOpen] = useState(false);
   const [breastValue, setBreastValue] = useState<number>(0);
@@ -27,7 +30,24 @@ const GrowthInput: React.FC = () => {
   const pumpedQuantityElems = generateNumberedColumnElem(0, 300, 5);
   const powderQuantityElems = generateNumberedColumnElem(0, 300, 5);
 
-  const onDone = () => console.log({"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": 0})
+  const onDone = async () => {
+    const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": 0}
+    console.log(growthData)
+    //const response = await apiClient.post<any>('/_doc', JSON.stringify(growthData));
+    //console.log(`Status code: ${response.status}`);
+
+    const config = {
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    }
+
+    axios.post('http://localhost:9200/growth/_doc', growthData, config)
+      .then(function (response) {
+        console.log(response);
+      })
+  }
   
   const BreastQuantityElem = {
     name: "BreastQuantityElem",
@@ -59,10 +79,7 @@ const GrowthInput: React.FC = () => {
                 <IonDatetime displayFormat="D MMM YYYY H:mm" min="2020" max="2026" value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value!)}></IonDatetime>
             </IonCol>
             <IonCol>
-                <IonItem>{breastValue}</IonItem>
-                <IonButton onClick={() => isBreastPickerOpen(true)}>
-                    Select quantity
-                </IonButton>
+                <IonItem onClick={() => isBreastPickerOpen(true)}>{breastValue}</IonItem>
                 <IonPicker 
                     isOpen={breastPickerIsOpen} 
                     columns={[ BreastQuantityElem ]} 
@@ -85,10 +102,7 @@ const GrowthInput: React.FC = () => {
                 />
             </IonCol>
             <IonCol>
-                <IonItem>{pumpedValue}</IonItem>
-                <IonButton onClick={() => {isPumpedPickerOpen(true);}}>
-                    Select type
-                </IonButton>
+                <IonItem onClick={() => isPumpedPickerOpen(true)}>{pumpedValue}</IonItem>
                 <IonPicker 
                     isOpen={pumpedPickerIsOpen} 
                     columns={[ PumpedQuantityElem ]} 
@@ -111,10 +125,7 @@ const GrowthInput: React.FC = () => {
                 />
             </IonCol>
             <IonCol>
-                <IonItem>{powderValue}</IonItem>
-                <IonButton onClick={() => {isPowderPickerOpen(true);}}>
-                    Select type
-                </IonButton>
+                <IonItem onClick={() => isPowderPickerOpen(true)}>{powderValue}</IonItem>
                 <IonPicker 
                     isOpen={powderPickerIsOpen} 
                     columns={[ PowderQuantityElem ]} 
@@ -140,10 +151,11 @@ const GrowthInput: React.FC = () => {
         </IonRow>
 
         <IonRow>
-            <IonCol/>
-            <IonCol/>
+            <IonCol size="1"/>
+            <IonCol size="1"/>
+            <IonCol size="1"/>
             <IonCol>
-              <IonButton color="primary" onClick={onDone}>Send</IonButton>
+              <IonButton expand="block" color="primary" onClick={onDone}>Send</IonButton>
             </IonCol>
             <IonCol/>
         </IonRow>
