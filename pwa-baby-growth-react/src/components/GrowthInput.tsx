@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonDatetime, IonFooter, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
+import TypeSelector from './TypeSelector';
+
+import './TypeSelector.css';
+import './TypePicker.css';
 
 const onSave = (v: String) => console.log("the selected type is: " + v);
 const onCancel = () => console.log("cancelled selection of type");
@@ -31,7 +35,9 @@ const GrowthInput: React.FC = () => {
             <IonCol>
                 <IonDatetime displayFormat="D MMM YYYY H:mm" min="2020" max="2026" value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value!)}></IonDatetime>
             </IonCol>
-            <IonCol></IonCol>
+            <IonCol>
+                <TypeSelector onSave={onSave}/>
+            </IonCol>
             <IonCol>
                 <IonButton onClick={() => {setPickerIsOpen(true);}}>
                     Select type
