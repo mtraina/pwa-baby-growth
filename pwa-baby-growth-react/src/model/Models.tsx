@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface GrowthData {
     datetime: string
     breast: number
@@ -8,6 +6,12 @@ export interface GrowthData {
     weight: number
 }
 
+export interface GrowthDataTableElem {
+    index: number
+    gd: GrowthData
+}
+
 export interface DataProvider {
     data: Array<GrowthData>
+    onDelete: any
 }

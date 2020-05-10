@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { IonItem, IonDatetime, IonGrid, IonRow, IonCol, IonPicker, IonButton } from '@ionic/react';
+import { IonItem, IonDatetime, IonGrid, IonRow, IonCol, IonPicker, IonButton, IonAlert } from '@ionic/react';
 import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
 import { apiClient } from '../rest/RestClient'
 import axios from 'axios';
 import DataTable from './DataTable';
-import { DataProvider } from '../model/Models';
+import { GrowthDataTableElem, DataProvider } from '../model/Models';
 
 interface GrowthData {
   datetime: string
@@ -36,7 +36,17 @@ const GrowthInput: React.FC = () => {
     {"datetime": '2020-05-09T20:07:35.568Z', "breast": 20, "pumped": 40, "powder": 60, "weight": 0},
     {"datetime": '2020-05-09T20:07:35.568Z', "breast": 30, "pumped": 60, "powder": 90, "weight": 0}
   ] 
-  const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: []});
+
+  const onDeleteRow = (gdte: GrowthDataTableElem) => {
+    console.log(gdte)
+    
+    // add alert!
+
+    const updatedData = selectedDataElems.data.filter((_, i) => i !== gdte.index)
+    updateDataElems({data: updatedData, onDelete: onDeleteRow})
+  }
+
+  const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete: onDeleteRow});
 
   const onAdd = () => {
     const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": 0}
@@ -58,8 +68,8 @@ const GrowthInput: React.FC = () => {
 
 
     //dataElems.push(growthData)
-    const updatedData = selectedDataElems.data.concat(growthData)
-    updateDataElems({data: updatedData})
+    const updatedData = [...selectedDataElems.data, growthData]
+    updateDataElems({data: updatedData, onDelete: onDeleteRow})
     console.log(dataElems)
   }
 
@@ -86,7 +96,7 @@ const GrowthInput: React.FC = () => {
     <div>
       <IonGrid>
           <IonRow>
-              <IonCol>Time</IonCol>
+              <IonCol>Date/Time</IonCol>
               <IonCol>Breast</IonCol>
               <IonCol>Pumped</IonCol>
               <IonCol>Powder</IonCol>
@@ -180,7 +190,7 @@ const GrowthInput: React.FC = () => {
           <IonRow>
             <IonCol size="2"/>
             <IonCol size="8">
-              <DataTable data={selectedDataElems.data}/>
+              <DataTable data={selectedDataElems.data} onDelete={onDeleteRow}/>
             </IonCol>
             <IonCol size="2"/>
           </IonRow>

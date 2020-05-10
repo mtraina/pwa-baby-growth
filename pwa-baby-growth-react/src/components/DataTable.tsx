@@ -1,13 +1,13 @@
 import React from 'react';
-import { IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonButton } from '@ionic/react';
 import { GrowthData, DataProvider } from '../model/Models'
 
-const DataTable: React.FC<DataProvider> = ({ data }) => {
+const DataTable: React.FC<DataProvider> = ({ data, onDelete }) => {
 
     return (
         <IonGrid>
             <IonRow>
-                <IonCol>Time</IonCol>
+                <IonCol>Date/Time</IonCol>
                 <IonCol>Breast</IonCol>
                 <IonCol>Pumped</IonCol>
                 <IonCol>Powder</IonCol>
@@ -20,7 +20,10 @@ const DataTable: React.FC<DataProvider> = ({ data }) => {
                     <IonCol>{dg.pumped}</IonCol>
                     <IonCol>{dg.powder}</IonCol>
                     <IonCol>{dg.weight}</IonCol>
-            </IonRow>
+                    <IonCol>
+                        <IonButton color="danger" onClick={() => onDelete({index, dg})}>Delete</IonButton>
+                    </IonCol>
+                </IonRow>
             ))}
         </IonGrid>
     )
