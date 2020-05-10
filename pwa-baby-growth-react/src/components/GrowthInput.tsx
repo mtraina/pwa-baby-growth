@@ -4,7 +4,7 @@ import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
 import { apiClient } from '../rest/RestClient'
 import axios from 'axios';
 import DataTable from './DataTable';
-import { GrowthDataTableElem, DataProvider } from '../model/Models';
+import { GrowthDataTableElem, DataProvider, indexGrowData, indexGrowDataStr, AsyncGrowthData } from '../model/Models';
 
 interface GrowthData {
   datetime: string
@@ -51,30 +51,72 @@ const GrowthInput: React.FC = () => {
   const onAdd = () => {
     const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": 0}
     console.log(growthData)
-    //const response = await apiClient.post<any>('/_doc', JSON.stringify(growthData));
-    //console.log(`Status code: ${response.status}`);
 
-    // const config = {
-    //   headers: { 
-    //     'Content-Type': 'application/json',
-    //     'Access-Control-Allow-Origin': '*'
-    //   }
-    // }
-
-    // axios.post('http://localhost:9200/growth/_doc', growthData, config)
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-
-
-    //dataElems.push(growthData)
     const updatedData = [...selectedDataElems.data, growthData]
     updateDataElems({data: updatedData, onDelete: onDeleteRow})
     console.log(dataElems)
   }
 
   const onSend = async () => {
+    // alert!
 
+    const indexedGrowthData = indexGrowData(selectedDataElems.data)
+
+    const indexedGrowthDataStr = indexGrowDataStr(selectedDataElems.data)
+
+    //console.log(indexedGrowthData)
+    console.log(indexedGrowthDataStr)
+    console.log(...indexedGrowthDataStr)
+
+    //const spread = ...indexedGrowthData
+
+    //console.log(...indexedGrowthData)
+    //console.log(JSON.stringify(indexedGrowthData))
+
+    //const response = await apiClient.post("/_bulk?pretty&refresh", ...indexedGrowthDataStr)
+
+    const elems = [...selectedDataElems.data]
+
+    // works
+    //const res = await storeEach(elems[0])
+    //console.log(res)
+
+    // to be converted to a map with promise.all for resolving them
+    let errorElems:Array<GrowthData> = []
+    elems.forEach(async elem => {
+      const res = await storeEach(elem)
+      console.log(res)
+
+      if(res.response.status !== 201) errorElems.push(res.gd)
+    })
+
+    updateDataElems({data: errorElems, onDelete: onDeleteRow})
+
+
+    //const ress = await elems.map(async gd => storeEach)
+    //console.log(ress)
+
+    //await Promise.all(ress).then(r => console.log(r))
+    
+    //onst results = await Promise.all(ress)//.then(r => console.log(r))
+
+    //const ress = await Promise.all(storingResult(elems))
+    //console.log(results)
+
+    //const errorElems = await storingResult(elems)
+    //  .then(res => res.forEach(r => console.log("result is: " + r)))  
+    //.filter((r, gd) => r.status !== 201 ).map((r, gd)=> gd)
+    //updateDataElems({data: errorElems, onDelete: onDeleteRow})
+
+    
+    //console.log("sent!")
+  }
+
+  const storingResult = async (elems: Array<GrowthData>) => elems.map(gd => storeEach)
+
+  const storeEach = async (gd: GrowthData) => {
+    const response = await apiClient.post("/_doc", gd)
+    return { response, gd }
   }
   
   const BreastQuantityElem = {
@@ -203,8 +245,7 @@ const GrowthInput: React.FC = () => {
             <IonCol size="2"/>
           </IonRow>
       </IonGrid>
-
-      
+    
     </div>
   );
 };
