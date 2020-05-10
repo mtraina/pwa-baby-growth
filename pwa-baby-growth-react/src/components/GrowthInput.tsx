@@ -4,15 +4,7 @@ import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
 import { apiClient } from '../rest/RestClient'
 import axios from 'axios';
 import DataTable from './DataTable';
-import { GrowthDataTableElem, DataProvider, indexGrowData, indexGrowDataStr, AsyncGrowthData } from '../model/Models';
-
-interface GrowthData {
-  datetime: string
-  breast: number
-  pumped: number
-  powder: number,
-  weight: number
-}
+import { GrowthData, GrowthDataTableElem, DataProvider, AsyncGrowthData } from '../model/Models';
 
 const GrowthInput: React.FC = () => {
   const now = new Date().toISOString();
@@ -31,11 +23,6 @@ const GrowthInput: React.FC = () => {
   const pumpedQuantityElems = generateNumberedColumnElem(0, 300, 5);
   const powderQuantityElems = generateNumberedColumnElem(0, 300, 5);
 
-  let dataElems: Array<GrowthData> = [
-    {"datetime": '2020-05-09T20:07:35.568Z', "breast": 10, "pumped": 20, "powder": 30, "weight": 0},
-    {"datetime": '2020-05-09T20:07:35.568Z', "breast": 20, "pumped": 40, "powder": 60, "weight": 0},
-    {"datetime": '2020-05-09T20:07:35.568Z', "breast": 30, "pumped": 60, "powder": 90, "weight": 0}
-  ] 
 
   const onDeleteRow = (gdte: GrowthDataTableElem) => {
     console.log(gdte)
@@ -54,26 +41,10 @@ const GrowthInput: React.FC = () => {
 
     const updatedData = [...selectedDataElems.data, growthData]
     updateDataElems({data: updatedData, onDelete: onDeleteRow})
-    console.log(dataElems)
   }
 
   const onSend = async () => {
     // alert!
-
-    const indexedGrowthData = indexGrowData(selectedDataElems.data)
-
-    const indexedGrowthDataStr = indexGrowDataStr(selectedDataElems.data)
-
-    //console.log(indexedGrowthData)
-    console.log(indexedGrowthDataStr)
-    console.log(...indexedGrowthDataStr)
-
-    //const spread = ...indexedGrowthData
-
-    //console.log(...indexedGrowthData)
-    //console.log(JSON.stringify(indexedGrowthData))
-
-    //const response = await apiClient.post("/_bulk?pretty&refresh", ...indexedGrowthDataStr)
 
     const elems = [...selectedDataElems.data]
 
@@ -111,9 +82,7 @@ const GrowthInput: React.FC = () => {
     
     //console.log("sent!")
   }
-
-  const storingResult = async (elems: Array<GrowthData>) => elems.map(gd => storeEach)
-
+  
   const storeEach = async (gd: GrowthData) => {
     const response = await apiClient.post("/_doc", gd)
     return { response, gd }
