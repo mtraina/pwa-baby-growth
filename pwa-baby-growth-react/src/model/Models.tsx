@@ -14,6 +14,7 @@ export interface GrowthDataTableElem {
 export interface DataProvider {
     data: Array<GrowthData>
     onDelete: any
+    onSend: any
 }
 
 export interface AsyncGrowthData {

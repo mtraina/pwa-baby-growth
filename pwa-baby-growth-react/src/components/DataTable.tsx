@@ -3,7 +3,7 @@ import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/react';
 import { GrowthData, DataProvider } from '../model/Models'
 import { closeCircleOutline, closeOutline } from 'ionicons/icons';
 
-const DataTable: React.FC<DataProvider> = ({ data, onDelete }) => {
+const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
 
     return (
         <IonGrid>
@@ -38,6 +38,14 @@ const DataTable: React.FC<DataProvider> = ({ data, onDelete }) => {
                     </IonRow>
                 </div>
             ))}
+
+            {data.length > 0 &&
+            <IonRow>
+                <IonCol size="12">
+                    <IonButton expand="block" color="primary" onClick={onSend}>Send</IonButton>
+                </IonCol>
+            </IonRow>
+            }
         </IonGrid>
     )
 }

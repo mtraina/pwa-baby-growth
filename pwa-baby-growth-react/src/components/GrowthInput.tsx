@@ -27,23 +27,21 @@ const GrowthInput: React.FC = () => {
   const weightQuantityElems = generateNumberedColumnElem(0, 10, 1);
 
 
-  const onDeleteRow = (gdte: GrowthDataTableElem) => {
+  const onDelete = (gdte: GrowthDataTableElem) => {
     console.log(gdte)
     
     // add alert!
 
     const updatedData = selectedDataElems.data.filter((_, i) => i !== gdte.index)
-    updateDataElems({data: updatedData, onDelete: onDeleteRow})
+    updateDataElems({data: updatedData, onDelete, onSend})
   }
-
-  const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete: onDeleteRow});
 
   const onAdd = () => {
     const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": weightValue}
     console.log(growthData)
 
     const updatedData = [...selectedDataElems.data, growthData]
-    updateDataElems({data: updatedData, onDelete: onDeleteRow})
+    updateDataElems({data: updatedData, onDelete, onSend})
   }
 
   const onSend = async () => {
@@ -64,7 +62,7 @@ const GrowthInput: React.FC = () => {
       if(res.response.status !== 201) errorElems.push(res.gd)
     })
 
-    updateDataElems({data: errorElems, onDelete: onDeleteRow})
+    updateDataElems({data: errorElems, onDelete, onSend})
 
 
     //const ress = await elems.map(async gd => storeEach)
@@ -85,6 +83,8 @@ const GrowthInput: React.FC = () => {
     
     //console.log("sent!")
   }
+
+  const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete, onSend: onSend});
   
   const storeEach = async (gd: GrowthData) => {
     const response = await apiClient.post("/_doc", gd)
@@ -235,18 +235,11 @@ const GrowthInput: React.FC = () => {
           <IonRow>
             <IonCol size="1"/>
             <IonCol size="10">
-              <DataTable data={selectedDataElems.data} onDelete={onDeleteRow}/>
+              <DataTable data={selectedDataElems.data} onDelete={onDelete} onSend={onSend}/>
             </IonCol>
             <IonCol size="1"/>
           </IonRow>
 
-          <IonRow>
-            <IonCol size="1"/>
-            <IonCol size="10">
-              <IonButton expand="block" color="primary" onClick={onSend}>Send</IonButton>
-            </IonCol>
-            <IonCol size="1"/>
-          </IonRow>
       </IonGrid>
     
     </div>
