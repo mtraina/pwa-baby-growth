@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { IonItem, IonDatetime, IonGrid, IonRow, IonCol, IonPicker, IonButton, IonAlert } from '@ionic/react';
+import { IonItem, IonDatetime, IonGrid, IonRow, IonCol, IonPicker, IonButton, IonAlert, IonLabel } from '@ionic/react';
 import { generateNumberedColumnElem } from '../utils/NumberedColumnElem';
 import { apiClient } from '../rest/RestClient'
-import axios from 'axios';
 import DataTable from './DataTable';
 import { GrowthData, GrowthDataTableElem, DataProvider, AsyncGrowthData } from '../model/Models';
 
@@ -19,9 +18,13 @@ const GrowthInput: React.FC = () => {
   const [powderPickerIsOpen, isPowderPickerOpen] = useState(false);
   const [powderValue, setPowderValue] = useState<number>(0);
 
+  const [weightPickerIsOpen, isWeightPickerOpen] = useState(false);
+  const [weightValue, setWeightValue] = useState<number>(0)
+
   const breastQuantityElems = generateNumberedColumnElem(0, 300, 5);
   const pumpedQuantityElems = generateNumberedColumnElem(0, 300, 5);
   const powderQuantityElems = generateNumberedColumnElem(0, 300, 5);
+  const weightQuantityElems = generateNumberedColumnElem(0, 10, 1);
 
 
   const onDeleteRow = (gdte: GrowthDataTableElem) => {
@@ -36,7 +39,7 @@ const GrowthInput: React.FC = () => {
   const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete: onDeleteRow});
 
   const onAdd = () => {
-    const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": 0}
+    const growthData = {"datetime": selectedDate, "breast": breastValue, "pumped": pumpedValue, "powder": powderValue, "weight": weightValue}
     console.log(growthData)
 
     const updatedData = [...selectedDataElems.data, growthData]
@@ -103,11 +106,23 @@ const GrowthInput: React.FC = () => {
     options: powderQuantityElems
   }   
 
+  const WeightQuantityElem = {
+    name: "WeightQuantityElem",
+    options: weightQuantityElems
+  }  
+
   return (
     <div>
       <IonGrid>
           <IonRow>
-              <IonCol>Date/Time</IonCol>
+              <IonCol>
+                  <IonLabel>Date/Time</IonLabel>
+              </IonCol>
+              <IonCol>
+                  <IonDatetime displayFormat="D MMM YYYY H:mm" min="2020" max="2026" value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value!)}></IonDatetime>
+              </IonCol>
+          </IonRow>
+          <IonRow>
               <IonCol>Breast</IonCol>
               <IonCol>Pumped</IonCol>
               <IonCol>Powder</IonCol>
@@ -115,9 +130,6 @@ const GrowthInput: React.FC = () => {
           </IonRow>
 
           <IonRow>
-              <IonCol>
-                  <IonDatetime displayFormat="D MMM YYYY H:mm" min="2020" max="2026" value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value!)}></IonDatetime>
-              </IonCol>
               <IonCol>
                   <IonItem onClick={() => isBreastPickerOpen(true)}>{breastValue}</IonItem>
                   <IonPicker 
@@ -187,31 +199,53 @@ const GrowthInput: React.FC = () => {
                         ]}
                   />
               </IonCol>
-              <IonCol></IonCol>
+              <IonCol>
+                  <IonItem onClick={() => isWeightPickerOpen(true)}>{weightValue}</IonItem>
+                  <IonPicker 
+                      isOpen={weightPickerIsOpen} 
+                      columns={[ WeightQuantityElem ]} 
+                      buttons={[
+                          {
+                            text: "Cancel",
+                            role: "cancel",
+                            handler: value => {
+                              isWeightPickerOpen(false)
+                            }
+                          },
+                          {
+                            text: "Confirm",
+                            handler: value => {
+                              setWeightValue(value.PowderQuantityElem.value)
+                              isWeightPickerOpen(false);
+                            }
+                          }
+                        ]}
+                  />
+              </IonCol>
           </IonRow>
 
           <IonRow>
-              <IonCol size="2"/>
-              <IonCol size="8">
+              <IonCol size="1"/>
+              <IonCol size="10">
                 <IonButton expand="block" color="secondary" onClick={onAdd}>Add</IonButton>
               </IonCol>
-              <IonCol size="2"/>
+              <IonCol size="1"/>
           </IonRow>
 
           <IonRow>
-            <IonCol size="2"/>
-            <IonCol size="8">
+            <IonCol size="1"/>
+            <IonCol size="10">
               <DataTable data={selectedDataElems.data} onDelete={onDeleteRow}/>
             </IonCol>
-            <IonCol size="2"/>
+            <IonCol size="1"/>
           </IonRow>
 
           <IonRow>
-            <IonCol size="2"/>
-            <IonCol size="8">
+            <IonCol size="1"/>
+            <IonCol size="10">
               <IonButton expand="block" color="primary" onClick={onSend}>Send</IonButton>
             </IonCol>
-            <IonCol size="2"/>
+            <IonCol size="1"/>
           </IonRow>
       </IonGrid>
     
