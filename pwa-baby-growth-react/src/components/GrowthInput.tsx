@@ -47,49 +47,14 @@ const GrowthInput: React.FC = () => {
   const onSend = async () => {
     // alert!
 
-    const elems = [...selectedDataElems.data]
-
-    // works
-    //const res = await storeEach(elems[0])
-    //console.log(res)
-
-    // to be converted to a map with promise.all for resolving them
-    let errorElems:Array<GrowthData> = []
-    elems.forEach(async elem => {
-      const res = await storeEach(elem)
-      console.log(res)
-
-      if(res.response.status !== 201) errorElems.push(res.gd)
-    })
-
-    updateDataElems({data: errorElems, onDelete, onSend})
-
-
-    //const ress = await elems.map(async gd => storeEach)
-    //console.log(ress)
-
-    //await Promise.all(ress).then(r => console.log(r))
-    
-    //onst results = await Promise.all(ress)//.then(r => console.log(r))
-
-    //const ress = await Promise.all(storingResult(elems))
-    //console.log(results)
-
-    //const errorElems = await storingResult(elems)
-    //  .then(res => res.forEach(r => console.log("result is: " + r)))  
-    //.filter((r, gd) => r.status !== 201 ).map((r, gd)=> gd)
-    //updateDataElems({data: errorElems, onDelete: onDeleteRow})
-
-    
-    //console.log("sent!")
+    const res = Promise.all(selectedDataElems.data.map(e => storeEach(e)))
+      .then(s => updateDataElems({data: [], onDelete, onSend}))
+      .catch(e => console.log("error on storing any element"))
   }
 
   const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete, onSend: onSend});
-  
-  const storeEach = async (gd: GrowthData) => {
-    const response = await apiClient.post("/_doc", gd)
-    return { response, gd }
-  }
+
+  const storeEach = async (gd: GrowthData) => apiClient.post("/_doc", gd)
   
   const BreastQuantityElem = {
     name: "BreastQuantityElem",

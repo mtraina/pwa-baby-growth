@@ -1,7 +1,7 @@
 import React from 'react';
 import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from '@ionic/react';
 import { GrowthData, DataProvider } from '../model/Models'
-import { closeCircleOutline, closeOutline } from 'ionicons/icons';
+import { closeOutline } from 'ionicons/icons';
 
 const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
 
