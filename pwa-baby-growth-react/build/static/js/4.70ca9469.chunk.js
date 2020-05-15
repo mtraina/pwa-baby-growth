@@ -1,2 +1,0 @@
-(this["webpackJsonppwa-baby-growth-react"]=this["webpackJsonppwa-baby-growth-react"]||[]).push([[4],{196:function(t,n,e){"use strict";e.r(n),e.d(n,"startStatusTap",(function(){return r}));var o=e(15),r=function(){var t=window;t.addEventListener("statusTap",(function(){Object(o.h)((function(){var n=t.innerWidth,e=t.innerHeight,r=document.elementFromPoint(n/2,e/2);if(r){var a=r.closest("ion-content");a&&a.componentOnReady().then((function(){Object(o.n)((function(){return a.scrollToTop(300)}))}))}}))}))}}}]);
-//# sourceMappingURL=4.70ca9469.chunk.js.map
