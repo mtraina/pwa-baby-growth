@@ -21,9 +21,9 @@ const GrowthInput: React.FC = () => {
   const [weightPickerIsOpen, isWeightPickerOpen] = useState(false);
   const [weightValue, setWeightValue] = useState<number>(0)
 
-  const breastQuantityElems = generateNumberedColumnElem(0, 300, 5);
+  const breastQuantityElems = generateNumberedColumnElem(0, 1, .5);
   const pumpedQuantityElems = generateNumberedColumnElem(0, 300, 5);
-  const powderQuantityElems = generateNumberedColumnElem(0, 300, 5);
+  const powderQuantityElems = generateNumberedColumnElem(0, 300, 10);
   const weightQuantityElems = generateNumberedColumnElem(0, 10, 1);
 
 

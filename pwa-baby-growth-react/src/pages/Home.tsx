@@ -9,13 +9,13 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Kindy progression</IonTitle>
+          <IonTitle>Kindy Progression</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle size="large">Kindy Progression</IonTitle>
           </IonToolbar>
         </IonHeader>
         {/* <ExploreContainer /> */}
