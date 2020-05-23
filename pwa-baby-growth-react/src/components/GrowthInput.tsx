@@ -6,6 +6,8 @@ import DataTable from './DataTable';
 import { GrowthData, GrowthDataTableElem, DataProvider, AsyncGrowthData } from '../model/Models';
 
 const GrowthInput: React.FC = () => {
+  const [onErrorAlertIsOpen, setOnErrorAlertOpen] = useState(false);
+
   const now = new Date().toISOString();
   const [selectedDate, setSelectedDate] = useState<string>(now);
 
@@ -29,9 +31,6 @@ const GrowthInput: React.FC = () => {
 
   const onDelete = (gdte: GrowthDataTableElem) => {
     console.log(gdte)
-    
-    // add alert!
-
     const updatedData = selectedDataElems.data.filter((_, i) => i !== gdte.index)
     updateDataElems({data: updatedData, onDelete, onSend})
   }
@@ -45,11 +44,12 @@ const GrowthInput: React.FC = () => {
   }
 
   const onSend = async () => {
-    // alert!
-
     const res = Promise.all(selectedDataElems.data.map(e => storeEach(e)))
       .then(s => updateDataElems({data: [], onDelete, onSend}))
-      .catch(e => console.log("error on storing any element"))
+      .catch(e => {
+        console.log("error on storing any element")
+        setOnErrorAlertOpen(true)
+       })
   }
 
   const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete, onSend: onSend});
@@ -78,6 +78,18 @@ const GrowthInput: React.FC = () => {
 
   return (
     <div>
+      <IonAlert
+        isOpen={onErrorAlertIsOpen}
+        onDidDismiss={() => console.log()}
+        header={'Error!'}
+        message={'Error saving any of the elements'}
+        buttons={[
+            {
+              text: 'Close',
+              handler: () => setOnErrorAlertOpen(false)
+            }
+      ]}/>
+
       <IonGrid>
           <IonRow>
               <IonCol>
