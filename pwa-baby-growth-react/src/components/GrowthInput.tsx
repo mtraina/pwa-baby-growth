@@ -6,7 +6,8 @@ import DataTable from './DataTable';
 import { GrowthData, GrowthDataTableElem, DataProvider, AsyncGrowthData } from '../model/Models';
 
 const GrowthInput: React.FC = () => {
-  const [onErrorAlertIsOpen, setOnErrorAlertOpen] = useState(false);
+  const [onSendSuccessAlertIsOpen, setOnSendSuccessAlertOpen] = useState(false);
+  const [onSendErrorAlertIsOpen, setOnSendErrorAlertOpen] = useState(false);
 
   const now = new Date().toISOString();
   const [selectedDate, setSelectedDate] = useState<string>(now);
@@ -45,11 +46,14 @@ const GrowthInput: React.FC = () => {
 
   const onSend = async () => {
     const res = Promise.all(selectedDataElems.data.map(e => storeEach(e)))
-      .then(s => updateDataElems({data: [], onDelete, onSend}))
+      .then(s => {
+        updateDataElems({data: [], onDelete, onSend})
+        setOnSendSuccessAlertOpen(true)
+      })
       .catch(e => {
         console.log("error on storing any element")
-        setOnErrorAlertOpen(true)
-       })
+        setOnSendErrorAlertOpen(true)
+      })
   }
 
   const [selectedDataElems, updateDataElems] = useState<DataProvider>({data: [], onDelete, onSend: onSend});
@@ -79,14 +83,25 @@ const GrowthInput: React.FC = () => {
   return (
     <div>
       <IonAlert
-        isOpen={onErrorAlertIsOpen}
+        isOpen={onSendSuccessAlertIsOpen}
+        onDidDismiss={() => console.log()}
+        header={'Success!'}
+        message={'All the elements have been saved'}
+        buttons={[
+            {
+              text: 'Close',
+              handler: () => setOnSendSuccessAlertOpen(false)
+            }
+      ]}/>
+      <IonAlert
+        isOpen={onSendErrorAlertIsOpen}
         onDidDismiss={() => console.log()}
         header={'Error!'}
         message={'Error saving any of the elements'}
         buttons={[
             {
               text: 'Close',
-              handler: () => setOnErrorAlertOpen(false)
+              handler: () => setOnSendErrorAlertOpen(false)
             }
       ]}/>
 
