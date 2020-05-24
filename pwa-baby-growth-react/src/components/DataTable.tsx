@@ -2,6 +2,7 @@ import React, { useState }  from 'react';
 import { IonGrid, IonRow, IonCol, IonButton, IonIcon, IonAlert } from '@ionic/react';
 import { GrowthData, DataProvider, GrowthDataTableElem } from '../model/Models'
 import { closeOutline } from 'ionicons/icons';
+import { formatDate } from '../utils/Dates'
 
 const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
 
@@ -80,7 +81,7 @@ const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
             {data.map((gd: GrowthData, index: number) => (
                 <div>
                     <IonRow key={`row-${index}`}>
-                        <IonCol size="10">{gd.datetime}</IonCol>
+                        <IonCol size="10">{formatDate(new Date(gd.datetime))}</IonCol>
                         <IonCol size="2">
                             <IonButton color="danger" onClick={() => preDelete({index, gd})}>
                                 <IonIcon icon={closeOutline} onClick={() => onDelete({index, gd})}/>

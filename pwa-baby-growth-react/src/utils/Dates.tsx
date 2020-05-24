@@ -1,0 +1,1 @@
+export const formatDate = (d: Date) => `${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}` 
