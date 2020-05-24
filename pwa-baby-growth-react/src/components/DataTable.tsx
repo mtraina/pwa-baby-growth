@@ -4,6 +4,8 @@ import { GrowthData, DataProvider, GrowthDataTableElem } from '../model/Models'
 import { closeOutline } from 'ionicons/icons';
 import { formatDate } from '../utils/Dates'
 
+import "./DataTable.css"
+
 const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
 
     const [onSendAlertIsOpen, isOnSendAlertOpen] = useState(false);
@@ -68,31 +70,26 @@ const DataTable: React.FC<DataProvider> = ({ data, onDelete, onSend }) => {
             {data.length > 0 &&
                 <div>
                     <IonRow>
-                        <IonCol size="8">Date/Time</IonCol>
-                    </IonRow>
-                    <IonRow>
-                        <IonCol>Breast</IonCol>
-                        <IonCol>Pumped</IonCol>
-                        <IonCol>Powder</IonCol>
-                        <IonCol>Weight</IonCol>
+                        <IonCol size="5">Date/Time</IonCol>
+                        <IonCol size="1.4">Br.</IonCol>
+                        <IonCol size="1.4">Pr.</IonCol>
+                        <IonCol size="1.4">Po.</IonCol>
+                        <IonCol size="1.4">We.</IonCol>
+                        <IonCol size="1.4"/>
                     </IonRow>
                 </div>
             }
             {data.map((gd: GrowthData, index: number) => (
                 <div>
                     <IonRow key={`row-${index}`}>
-                        <IonCol size="10">{formatDate(new Date(gd.datetime))}</IonCol>
-                        <IonCol size="2">
-                            <IonButton color="danger" onClick={() => preDelete({index, gd})}>
-                                <IonIcon icon={closeOutline} onClick={() => onDelete({index, gd})}/>
-                            </IonButton>
+                        <IonCol size="5">{formatDate(new Date(gd.datetime))}</IonCol>
+                        <IonCol size="1.4">{gd.breast}</IonCol>
+                        <IonCol size="1.4">{gd.pumped}</IonCol>
+                        <IonCol size="1.4">{gd.powder}</IonCol>
+                        <IonCol size="1.4">{gd.weight}</IonCol>
+                        <IonCol size="1.4">
+                            <IonButton className="delete-button" color="danger" onClick={() => preDelete({index, gd})}>X</IonButton>
                         </IonCol>
-                    </IonRow>
-                    <IonRow key={`row-${index}`}>
-                        <IonCol>{gd.breast}</IonCol>
-                        <IonCol>{gd.pumped}</IonCol>
-                        <IonCol>{gd.powder}</IonCol>
-                        <IonCol>{gd.weight}</IonCol>
                     </IonRow>
                 </div>
             ))}

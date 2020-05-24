@@ -217,19 +217,17 @@ const GrowthInput: React.FC = () => {
           </IonRow>
 
           <IonRow>
-              <IonCol size="1"/>
-              <IonCol size="10">
+              <IonCol size="0.4"/>
+              <IonCol size="11.2">
                 <IonButton expand="block" color="secondary" onClick={onAdd}>Add</IonButton>
               </IonCol>
-              <IonCol size="1"/>
+              <IonCol size="0.4"/>
           </IonRow>
 
           <IonRow>
-            <IonCol size="1"/>
-            <IonCol size="10">
+            <IonCol size="12">
               <DataTable data={selectedDataElems.data} onDelete={onDelete} onSend={onSend}/>
             </IonCol>
-            <IonCol size="1"/>
           </IonRow>
 
       </IonGrid>
